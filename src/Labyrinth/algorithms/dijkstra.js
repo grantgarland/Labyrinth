@@ -21,6 +21,13 @@ export function dijkstra(grid, startNode, finishNode) {
   }
 }
 
+export function resetNodes(grid) {
+  const allNodes = getAllNodes(grid);
+  allNodes.forEach(node => {
+    node.isVisited = false;
+  });
+}
+
 function sortNodesByDistance(unvisitedNodes) {
   unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 }

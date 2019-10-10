@@ -1,3 +1,31 @@
 .grid {
-  margin: 100px 0 0;
+  margin: 50px 0 0;
+}
+
+.mazeButton {
+  margin: 30px 5px 5px 0;
+  background-color: #44c767;
+  border-radius: 28px;
+  border: 1px solid #18ab29;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Verdana;
+  font-size: 17px;
+  padding: 16px 66px;
+  text-decoration: none;
+}
+
+.resetButton {
+  margin: 30px 5px 5px 0;
+  background-color: #c53410;
+  border-radius: 28px;
+  border: 1px solid #c20808;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Verdana;
+  font-size: 17px;
+  padding: 16px 66px;
+  text-decoration: none;
 }

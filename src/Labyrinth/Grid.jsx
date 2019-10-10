@@ -1,13 +1,17 @@
 import React, {Component} from 'react';
 import Node from './Node';
-import {dijkstra, getNodesInShortestPathOrder} from './algorithms/dijkstra';
+import {
+  dijkstra,
+  getNodesInShortestPathOrder,
+  resetNodes,
+} from './algorithms/dijkstra';
 
 import './Grid.css';
 
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+const START_NODE_ROW = 5;
+const START_NODE_COL = 10;
+const FINISH_NODE_ROW = 15;
+const FINISH_NODE_COL = 40;
 
 export default class Grid extends Component {
   constructor() {
@@ -17,10 +21,37 @@ export default class Grid extends Component {
       mouseIsPressed: false,
     };
   }
+  visitedNodesInOrder = undefined;
+  nodesInShortestPathOrder = undefined;
 
   componentDidMount() {
+    this.buildGrid();
+  }
+
+  buildGrid() {
     const grid = getInitialGrid();
-    this.setState({grid});
+    this.setState({grid}, () => this.initializeMaze());
+  }
+
+  resetGrid() {
+    resetNodes(this.state.grid);
+    this.buildGrid();
+
+    if (this.visitedNodesInOrder) {
+      for (let i = 0; i <= this.visitedNodesInOrder.length; i++) {
+        const node = this.visitedNodesInOrder[i];
+        if (node && !node.isStart && !node.isFinish) {
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node';
+        } else if (node && node.isStart) {
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-start';
+        } else if (node) {
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-finish';
+        }
+      }
+    }
   }
 
   handleMouseDown(row, col) {
@@ -68,18 +99,71 @@ export default class Grid extends Component {
     const {grid} = this.state;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    this.visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+    this.nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    this.animateDijkstra(
+      this.visitedNodesInOrder,
+      this.nodesInShortestPathOrder,
+    );
   }
+
+  initializeMaze = () => {
+    const {grid} = this.state;
+    let relevantIds = [grid[0], grid[grid.length]];
+    if (grid.object) relevantIds.push(grid.object);
+    // Draw the maze border
+    grid.forEach(row => {
+      row.forEach(node => {
+        let r = node.row;
+        let c = node.col;
+        if (r === 0 || c === 0 || r === 19 || c === 49) {
+          node.isWall = true;
+          this.setState({grid});
+        }
+      });
+    });
+    // Draw maze internal walls
+    let possibleRows = [];
+    for (let number = 0; number <= 30; number += 2) {
+      possibleRows.push(number);
+    }
+    let possibleCols = [];
+    for (let number = 1; number <= 50; number += 2) {
+      possibleCols.push(number);
+    }
+
+    grid.forEach((row, i) => {
+      row.forEach((node, j) => {
+        let randomRowIndex = Math.floor(Math.random() * possibleRows.length);
+        let randomColIndex = Math.floor(Math.random() * possibleCols.length);
+
+        if (
+          (possibleRows.includes(node.row) && node.row % randomRowIndex > 0) ||
+          node.row % randomRowIndex < 2
+        ) {
+          if (
+            (possibleCols.includes(node.col) &&
+              node.col % randomColIndex > 1) ||
+            node.col % randomColIndex < 2
+          ) {
+            node.isWall = true;
+            this.setState({grid});
+          }
+        }
+      });
+    });
+  };
 
   render() {
     const {grid, mouseIsPressed} = this.state;
 
     return (
       <>
-        <button onClick={() => this.visualizeDijkstra()}>
-          Visualize Dijkstra's Algorithm
+        <button className="mazeButton" onClick={() => this.visualizeDijkstra()}>
+          Navigate Labyrinth
+        </button>
+        <button className="resetButton" onClick={() => this.resetGrid()}>
+          Reset
         </button>
         <div className="grid">
           {grid.map((row, rowIdx) => {
@@ -111,6 +195,7 @@ export default class Grid extends Component {
     );
   }
 }
+
 const getInitialGrid = () => {
   const grid = [];
   for (let row = 0; row < 20; row++) {
@@ -122,6 +207,7 @@ const getInitialGrid = () => {
   }
   return grid;
 };
+
 const createNode = (col, row) => {
   return {
     col,
@@ -134,6 +220,7 @@ const createNode = (col, row) => {
     previousNode: null,
   };
 };
+
 const getNewGridWithWallToggled = (grid, row, col) => {
   const newGrid = grid.slice();
   const node = newGrid[row][col];
