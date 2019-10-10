@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/Labyrinth/static/css/main.9c4f2566.chunk.css",
+    "main.js": "/Labyrinth/static/js/main.47f79ca8.chunk.js",
+    "main.js.map": "/Labyrinth/static/js/main.47f79ca8.chunk.js.map",
+    "runtime-main.js": "/Labyrinth/static/js/runtime-main.48886904.js",
+    "runtime-main.js.map": "/Labyrinth/static/js/runtime-main.48886904.js.map",
+    "static/js/2.c372e32f.chunk.js": "/Labyrinth/static/js/2.c372e32f.chunk.js",
+    "static/js/2.c372e32f.chunk.js.map": "/Labyrinth/static/js/2.c372e32f.chunk.js.map",
+    "index.html": "/Labyrinth/index.html",
+    "precache-manifest.6f8de204d7ccb3c1915b14b607207786.js": "/Labyrinth/precache-manifest.6f8de204d7ccb3c1915b14b607207786.js",
+    "service-worker.js": "/Labyrinth/service-worker.js",
+    "static/css/main.9c4f2566.chunk.css.map": "/Labyrinth/static/css/main.9c4f2566.chunk.css.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.48886904.js",
+    "static/js/2.c372e32f.chunk.js",
+    "static/css/main.9c4f2566.chunk.css",
+    "static/js/main.47f79ca8.chunk.js"
+  ]
+}
